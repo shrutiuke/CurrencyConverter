@@ -2,9 +2,9 @@ Currency Converter User Manual
 
  
 
-·     Required Software Enviorment
+Â·     Required Software Enviorment
 
-·     Installation Details.
+Â·     Installation Details.
 
  
 
@@ -23,7 +23,7 @@ Installation Details
 1.     Kindly find below link for Node and Npm Installation .   https://nodejs.org/en/download/
 
 2.     Then install the Angular CLI globally using below command in Command window.    
-               npm install  -g  @angular/cli
+               npm install  
 
 3.     Copy  checkout code of CurrencyConverter Application from github and place at D:\ directivties.
 
