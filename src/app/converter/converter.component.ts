@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { CurrencyrateService } from '../currencyrate.service';
 
 
+
 @Component({
   selector: 'app-converter',
   templateUrl: './converter.component.html',
@@ -16,23 +17,28 @@ export class ConverterComponent implements OnInit {
   name: string;
   levelNum: number;
   levels: Array<any> = [];
-  fromRates: Object = {}; 
+  fromRates: Object = {};
   referarray: Array<any> = [];
   selectedLevel1: string = null;
   selectedLevel2: string = null;
   input: number;
   output: number;
   disclaimerFlag: boolean;
-
+  CurrencycorrectionFlag: boolean;
+ 
 
   constructor(private rateService: CurrencyrateService) { }
 
   ngOnInit() {
-    this.input=10;
-
+   
+    this.output = null;
     this.currencyrate(true);
 
+   
   };
+
+
+   
 
   showDisclaimer() {
     this.disclaimerFlag = !this.disclaimerFlag;
@@ -44,7 +50,8 @@ export class ConverterComponent implements OnInit {
     this.rateService.getRates(this.selectedLevel1).then(response => {
       if (response.rates) {
         if(service){        
-        const items: Array<any> = this.parseData(response.rates);       
+        const items: Array<any> = this.parseData(response.rates);
+        // items.push({ id: 'EUR', value: 1 });
         let base:string = null;
         base = response.base;
 
@@ -90,17 +97,30 @@ export class ConverterComponent implements OnInit {
     });
   };
 
-  public getCurrencyRate() {
+  onKey(){
+    this.CurrencycorrectionFlag = false;    
+    const pattern = /^(?:[1-9]\d*)(?:\.(?!.*000)\d+)?$/;
+
+    let inputChar = this.input.toString();
+
+    if (!pattern.test( inputChar)) {
+      this.CurrencycorrectionFlag = true;
+      this.output = null; 
 	  
-	  if(this.selectedLevel1 === this.selectedLevel2)
-	  {this.output = this.input}
-  else{
-		  this.output = Math.ceil((this.input * this.fromRates[this.selectedLevel2]) * 100) / 100;
-	  }
-
      
+    }else{
+      this.getCurrencyRate();
+    }
 
-  }
+  };
+
+  public getCurrencyRate() {   
+
+    if(this.selectedLevel1 === this.selectedLevel2)
+    {this.output = this.input}
+    else{this.output = Math.ceil((this.input * this.fromRates[this.selectedLevel2]) * 100) / 100;}
+    
+       }
 
   private parseData(data) {
     const arr: Array<any> = [];

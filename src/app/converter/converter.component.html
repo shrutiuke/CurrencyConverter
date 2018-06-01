@@ -1,45 +1,57 @@
 <body>
-  <div class="slds-p-around_xx-large slds-m-around_xx-large">
-  <div class="slds-box slds-card slds-modal__container slds-theme_warning">
-    <div >
-    <label class="slds-page-header__title">Currency Converter</label>
-    <div class=" slds-gutters slds-p-around_medium">
-        <label class="slds-item_label" for="text-input-id-1">Type in amount and select Currency:</label>   
-      <div class="slds-size_1-of-2 slds-grid">
-         
-      <div class="slds-col  ">           
-           <input id="inputCurr" class="slds-input" type="number" min="0" max="1000"  maxlength="4" [(ngModel)]="input" (input)="getCurrencyRate()" >
-      </div>
-      <div class="slds-col">
-        <select class="slds-select" id="selectedLevel1" [(ngModel)]="selectedLevel1" (ngModelChange)="currencyrate(false)" >
-          <option *ngFor="let level of levels" [ngValue]="level.id" >{{level.id}}</option>
-        </select>
-      </div>
-    </div>
-  </div>
-    </div>
-    <div>
-    <div class=" slds-gutters slds-p-around_medium">   
-        <label class="slds-item_label" for="text-input-id-1">Converted Amount:</label>
-      <div class=" slds-size_1-of-2 slds-grid">
-         
-      <div class="slds-col">        
-            <input id="oututCurr" class="slds-input " type="number" min="0" max="1000" maxlength="4" [(ngModel)]="output" (ngModelChange)="getCurrencyRate()" >
-      </div>
-      <div class="slds-col ">
-        <select class="slds-select" [(ngModel)]="selectedLevel2" (ngModelChange)="getCurrencyRate()" >
-          <option *ngFor="let level of levels" [ngValue]="level.id">{{level.id}}</option>
-        </select>
-      </div>
-    </div>
-  </div>
-  <span   (click)="showDisclaimer()" class="slds-text-link slds-float_right" >Disclaimer</span >
-    </div>
-    <div class="row" *ngIf="disclaimerFlag">
-        <p class="label">***Exchange rate is the rate at which one currency will be exchanged for another. It is also regarded as the value of one country’s currency in relation to another currency.</p>
-      </div>
-   
 
+    <div class="slds-p-around_xx-large slds-m-left_xx-large slds-p-left_xx-large">
+    <div class="  slds-m-around_x-large slds-box_x-small ">      
+      <div class="slds-p-around_medium">
+        <label class="slds-page-header__title">Currency Converter</label>
+        <div class=" slds-gutters slds-p-around_medium">
+          <label class="slds-item_label" for="text-input-id-1">Type in amount and select Currency:</label>
+          <div class="slds-size_1-of-2 slds-grid">
+
+            <div class="slds-col">
+              <input id="inputCurr" class="slds-input " type="text" maxlength="40" [(ngModel)]="input" (input)="onKey()" placeholder="0.00">
+              <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert" *ngIf="CurrencycorrectionFlag">
+                <p aria-describedby="error-message" >Currency Must be in Proper 100.00 Format..!!</p>
+              </div>
+            </div>
+            <div class="slds-col">
+              <select class="slds-select  slds-theme_shade" id="selectedLevel1" [(ngModel)]="selectedLevel1" (ngModelChange)="currencyrate(false)">
+                <option *ngFor="let level of levels" [ngValue]="level.id">{{level.id}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slds-p-around_medium">
+        <div class=" slds-gutters slds-p-around_medium">
+          <label class="slds-item_label" for="text-input-id-1">Converted Amount:</label>
+          <div class=" slds-size_1-of-2 slds-grid">
+
+            <div class="slds-col">
+              <input id="oututCurr" class="slds-input " type="text"  placeholder="0.00" [(ngModel)]="output" (ngModelChange)="onKey()">
+            </div>
+            <div class="slds-col ">
+              <select class="slds-select  slds-theme_shade" [(ngModel)]="selectedLevel2" (ngModelChange)="onKey()">
+                <option *ngFor="let level of levels" [ngValue]="level.id">{{level.id}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div classs="slds-p-around_medium">
+
+        <div>
+          <a href="javascript:void(0);" (click)="showDisclaimer()" style="margin-left:25rem;">Disclaimer</a>
+        </div>
+        <div class="row" *ngIf="disclaimerFlag">
+          <p class="label">***Exchange rate is the rate at which one currency will be exchanged for another. It is also regarded as the value
+            of one country’s currency in relation to another currency.</p>
+        </div>
+      </div>
+
+    </div>
   </div>
-</div>
+
 </body>

@@ -104,11 +104,6 @@
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
             "devServerTarget": "CurrencyConverter:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "CurrencyConverter:serve:production"
-            }
           }
         },
         "lint": {
