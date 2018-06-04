@@ -9,13 +9,13 @@
           <div class="slds-size_1-of-2 slds-grid">
 
             <div class="slds-col">
-              <input id="inputCurr" class="slds-input " type="text" maxlength="40" [(ngModel)]="input" (input)="onKey()" placeholder="0.00">
-              <div class="slds-notify slds-notify_alert slds-theme_alert-texture slds-theme_error" role="alert" *ngIf="CurrencycorrectionFlag">
-                <p aria-describedby="error-message" >Currency Must be in Proper 100.00 Format..!!</p>
+              <input id="inputCurr" class="slds-input " type="text" maxlength="40" [(ngModel)]="input" (input)="onKey(true)" placeholder="0.00">
+              <div class="slds-theme_alert-texture slds-theme_error" role="alert" *ngIf="CurrencycorrectionFlag">
+                <p aria-describedby="error-message" >Currency Must be in Proper 0.00 Format..!!</p>
               </div>
             </div>
             <div class="slds-col">
-              <select class="slds-select  slds-theme_shade" id="selectedLevel1" [(ngModel)]="selectedLevel1" (ngModelChange)="currencyrate(false)">
+              <select class="slds-select" id="selectedLevel1" [(ngModel)]="selectedLevel1" [disabled]="butDisabled" (ngModelChange)="currencyrate(false)">
                 <option *ngFor="let level of levels" [ngValue]="level.id">{{level.id}}</option>
               </select>
             </div>
@@ -28,10 +28,13 @@
           <div class=" slds-size_1-of-2 slds-grid">
 
             <div class="slds-col">
-              <input id="oututCurr" class="slds-input " type="text"  placeholder="0.00" [(ngModel)]="output" (ngModelChange)="onKey()">
+              <input id="oututCurr" class="slds-input " type="text"  placeholder="0.00" [(ngModel)]="output" (ngModelChange)="onKey(false)">
+              <div class="slds-theme_alert-texture slds-theme_error" role="alert" *ngIf="CurrencycorrectionFlagreverse">
+                <p aria-describedby="error-message" >Currency Must be in Proper 0.00 Format..!!</p>
+              </div>
             </div>
             <div class="slds-col ">
-              <select class="slds-select  slds-theme_shade" [(ngModel)]="selectedLevel2" (ngModelChange)="onKey()">
+              <select class="slds-select" [disabled]="butDisabled" [(ngModel)]="selectedLevel2" (ngModelChange)="onKey(true)" >
                 <option *ngFor="let level of levels" [ngValue]="level.id">{{level.id}}</option>
               </select>
             </div>

@@ -5,6 +5,7 @@ import { CurrencyrateService } from '../currencyrate.service';
 
 
 
+
 @Component({
   selector: 'app-converter',
   templateUrl: './converter.component.html',
@@ -25,6 +26,8 @@ export class ConverterComponent implements OnInit {
   output: number;
   disclaimerFlag: boolean;
   CurrencycorrectionFlag: boolean;
+  butDisabled: boolean;
+  CurrencycorrectionFlagreverse:boolean;
  
 
   constructor(private rateService: CurrencyrateService) { }
@@ -89,7 +92,7 @@ export class ConverterComponent implements OnInit {
       }
      
         this.fromRates = response.rates;
-        this.getCurrencyRate();
+        this.getCurrencyRate(true);
       
 
       };
@@ -97,30 +100,59 @@ export class ConverterComponent implements OnInit {
     });
   };
 
-  onKey(){
-    this.CurrencycorrectionFlag = false;    
+  onKey(initial){
+    this.CurrencycorrectionFlag = false;
+    this.CurrencycorrectionFlagreverse = false;    
     const pattern = /^(?:[1-9]\d*)(?:\.(?!.*000)\d+)?$/;
+    let inputChar = null;
 
-    let inputChar = this.input.toString();
+    if(initial){
 
-    if (!pattern.test( inputChar)) {
-      this.CurrencycorrectionFlag = true;
-      this.output = null; 
-	  
-     
-    }else{
-      this.getCurrencyRate();
+       inputChar = this.input.toString();
+
+       if (!pattern.test( inputChar)) {
+        this.CurrencycorrectionFlag = true;
+        this.butDisabled = true;
+        this.output = null;      
+       
+      }else{
+        this.butDisabled = false;     
+        this.getCurrencyRate(true);
+      }
+    }
+    else{
+       inputChar = this.output.toString();
+
+       if (!pattern.test( inputChar)) {
+        this.CurrencycorrectionFlagreverse = true;
+        this.butDisabled = true;
+        this.output = null;      
+       
+      }else{
+        this.butDisabled = false;     
+        this.getCurrencyRate(false);
+      }
     }
 
   };
 
-  public getCurrencyRate() {   
-
-    if(this.selectedLevel1 === this.selectedLevel2)
-    {this.output = this.input}
-    else{this.output = Math.ceil((this.input * this.fromRates[this.selectedLevel2]) * 100) / 100;}
+  public getCurrencyRate(initial) {   
     
+    if(initial){
+      if(this.selectedLevel1 === this.selectedLevel2)
+         {this.output = this.input}
+    else{this.output = Math.ceil((this.input * this.fromRates[this.selectedLevel2]) * 100) / 100;}    
        }
+
+    else{
+      if(this.selectedLevel2 === this.selectedLevel1)
+      {this.input = this.output}
+          else{this.input = Math.ceil((this.output / this.fromRates[this.selectedLevel2]) * 100) / 100;}    
+    }
+    }
+
+
+    
 
   private parseData(data) {
     const arr: Array<any> = [];
