@@ -14,7 +14,9 @@ export class CurrencyrateService {
 
   constructor( private http: Http) { }
 
-  rateurl = "https://api.fixer.io/latest";
+//   rateurl = "https://api.fixer.io/latest";
+  
+  rateurl = "http://data.fixer.io/api/latest?access_key=1d067d54e5c1cc65124ed6b77358a3df&format=1";
 
  
   getRates(selectedLevel1): Promise<any> {
