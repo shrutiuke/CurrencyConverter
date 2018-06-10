@@ -4,8 +4,6 @@ import { Observable } from 'rxjs';
 import { CurrencyrateService } from '../currencyrate.service';
 
 
-
-
 @Component({
   selector: 'app-converter',
   templateUrl: './converter.component.html',
@@ -20,25 +18,29 @@ export class ConverterComponent implements OnInit {
   levels: Array<any> = [];
   fromRates: Object = {};
   referarray: Array<any> = [];
-  selectedLevel1: string = null;
-  selectedLevel2: string = null;
-  input: number;
-  output: number;
+  selectedLevel1: Array<any> = [];
+  selectedLevel2: Array<any> = [];
+  input: Array<any> = [];
+  output: Array<any> = [];
   disclaimerFlag: boolean;
   CurrencycorrectionFlag: boolean;
   butDisabled: boolean;
   CurrencycorrectionFlagreverse:boolean;
- 
+  
 
   constructor(private rateService: CurrencyrateService) { }
 
   ngOnInit() {
    
-    this.output = null;
+    // this.output []= null;
     this.currencyrate(true);
 
    
   };
+
+  arrayOne(n: number): any[]{
+    return Array(n);
+  }
 
 
    
@@ -49,8 +51,10 @@ export class ConverterComponent implements OnInit {
 
 
   public currencyrate(service) {
+
+    for(var i=0 ; i<3 ; i++){
    
-    this.rateService.getRates(this.selectedLevel1).then(response => {
+    this.rateService.getRates(this.selectedLevel1[i]).then(response => {
       if (response.rates) {
         if(service){        
         const items: Array<any> = this.parseData(response.rates);
@@ -85,8 +89,8 @@ export class ConverterComponent implements OnInit {
       
 
         this.levels = List;
-        this.selectedLevel1 = this.levels[0].id;
-        this.selectedLevel2 = this.levels[2].id;
+        this.selectedLevel1[i]= this.levels[0].id;
+        this.selectedLevel2[i] = this.levels[2].id;
         this.referarray = this.referarray;
         this.currencyrate(false);
       }
@@ -99,60 +103,60 @@ export class ConverterComponent implements OnInit {
 
     });
   };
+};
 
-  onKey(initial){
-    this.CurrencycorrectionFlag = false;
-    this.CurrencycorrectionFlagreverse = false;    
-    const pattern = /^(?:[1-9]\d*)(?:\.(?!.*000)\d+)?$/;
-    let inputChar = null;
-
-    if(initial){
-
-       inputChar = this.input.toString();
-
-       if (!pattern.test( inputChar)) {
-        this.CurrencycorrectionFlag = true;
-        this.butDisabled = true;
-        this.output = null;      
-       
-      }else{
-        this.butDisabled = false;     
-        this.getCurrencyRate(true);
-      }
+  onKey(event){
+      event = (event) ? event : window.event;
+    var charCode = (event.which) ? event.which : event.keyCode;
+    var parts = event.srcElement.value.split('.');
+    if (charCode > 31 && (charCode < 48 || charCode > 57 ) && charCode != 46  ) {
+        return false;
     }
-    else{
-       inputChar = this.output.toString();
-
-       if (!pattern.test( inputChar)) {
-        this.CurrencycorrectionFlagreverse = true;
-        this.butDisabled = true;
-        this.output = null;      
-       
-      }else{
-        this.butDisabled = false;     
-        this.getCurrencyRate(false);
-      }
+    else if (charCode == 46 && parts.length >1){
+      return false;
     }
+    this.getCurrencyRate(true);
+
+    return true;    
 
   };
 
-  public getCurrencyRate(initial) {   
+  onReverse(event){
+    event = (event) ? event : window.event;
+  var charCode = (event.which) ? event.which : event.keyCode;
+  var parts = event.srcElement.value.split('.');
+  if (charCode > 31 && (charCode < 48 || charCode > 57 ) && charCode != 46  ) {
+      return false;
+  }
+  else if (charCode == 46 && parts.length >1){
+    return false;
+  }
+  this.getCurrencyRate(false);
+
+  return true;    
+
+};
+
+  public getCurrencyRate(initial) { 
+
+
+    for (var i=0; i<3; i++){
     
     if(initial){
-      if(this.selectedLevel1 === this.selectedLevel2)
-         {this.output = this.input}
-    else{this.output = Math.ceil((this.input * this.fromRates[this.selectedLevel2]) * 100) / 100;}    
+      if(this.selectedLevel1[i] === this.selectedLevel2[i])
+         {this.output[i] = this.input[i]}
+    else{
+      
+      this.output[i] = Math.ceil((this.input[i] * this.fromRates[this.selectedLevel2[i]]) * 100) / 100;}    
        }
 
     else{
-      if(this.selectedLevel2 === this.selectedLevel1)
-      {this.input = this.output}
-          else{this.input = Math.ceil((this.output / this.fromRates[this.selectedLevel2]) * 100) / 100;}    
+      if(this.selectedLevel2[i]=== this.selectedLevel1[i])
+      {this.input[i] = this.output[i]}
+          else{this.input[i] = Math.ceil((this.output[i] / this.fromRates[this.selectedLevel2[i]]) * 100) / 100;}    
     }
-    }
-
-
-    
+  }   
+}
 
   private parseData(data) {
     const arr: Array<any> = [];
