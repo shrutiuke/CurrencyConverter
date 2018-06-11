@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { CurrencyrateService } from '../currencyrate.service';
 
 
+
 @Component({
   selector: 'app-converter',
   templateUrl: './converter.component.html',
@@ -11,8 +12,8 @@ import { CurrencyrateService } from '../currencyrate.service';
   providers: [CurrencyrateService]
 })
 
-export class ConverterComponent implements OnInit {
 
+export class ConverterComponent implements OnInit {
   name: string;
   levelNum: number;
   levels: Array<any> = [];
@@ -22,141 +23,156 @@ export class ConverterComponent implements OnInit {
   selectedLevel2: Array<any> = [];
   input: Array<any> = [];
   output: Array<any> = [];
-  disclaimerFlag: boolean;
-  CurrencycorrectionFlag: boolean;
+  disclaimerFlag: boolean = false;
+  displayBlock: number;
+  CurrencycorrectionFlag: boolean = false;
   butDisabled: boolean;
-  CurrencycorrectionFlagreverse:boolean;
-  
+  CurrencycorrectionFlagreverse: boolean = false;
 
   constructor(private rateService: CurrencyrateService) { }
 
   ngOnInit() {
-   
-    // this.output []= null;
     this.currencyrate(true);
-
-   
   };
 
-  arrayOne(n: number): any[]{
+
+  arrayOne(n: number): any[] {
     return Array(n);
   }
+  showDisclaimer(event,value) {
+
+    var target = event.target || event.srcElement || event.currentTarget;
+    var idAttr = target.attributes.id;
+    var value = idAttr.nodeValue;
+    var id = value.split("_", 2)[1];
+    var flagId = "disclaimerFlag_".concat(id);
+ 
+    this.disclaimerFlag= !this.disclaimerFlag;
+
+    if(id == 0){
+      this.displayBlock = 0;
+    }else if(id == 1){
+      this.displayBlock = 1;
+    }else if(id == 2){
+      this.displayBlock = 2;
+    }
+  }
+ 
+  public currencyrate(service) {
+    for (var i = 0; i < 3; i++) {
+      this.rateService.getRates(this.selectedLevel1[i]).then(response => {
+        if (response.rates) {
+          if (service) {
+            const items: Array<any> = this.parseData(response.rates);
+            // items.push({ id: 'EUR', value: 1 });
+            let base: string = null;
+            base = response.base;
+            let List: Array<any> = [];
+            if (base === "EUR") {
+              this.referarray = [{ id: "USD", value: 2 }, { id: "CAD", value: 3 }];
+              List.push({ id: "EUR", value: 1 });
+            }
+            else if (base === "CAD") {
+              this.referarray = [{ id: "USD", value: 2 }, { id: "EUR", value: 3 }];
+              List.push({ id: "CAD", value: 1 });
+            }
+            else if (base === "USD") {
+              this.referarray = [{ id: "CAD", value: 2 }, { id: "EUR", value: 3 }];
+              List.push({ id: "USD", value: 1 });
+            }
+
+            for (var _i = 0; _i < items.length; _i++) {
+              for (var _j = 0; _j < this.referarray.length; _j++) {
+                if (items[_i].id === this.referarray[_j].id) {
+                  List.push({ id: items[_i].id, value: items[_i].value });
+                }
+              }
+            }
+            this.levels = List;
+            this.referarray = this.referarray;
+            this.currencyrate(false);
+
+          }
 
 
-   
-
-  showDisclaimer() {
-    this.disclaimerFlag = !this.disclaimerFlag;
+          this.fromRates = response.rates;
+          this.getCurrencyRate(true, false);
+        };
+      });
+    };
   };
 
 
-  public currencyrate(service) {
+  onKey(event) {
+    event = (event) ? event : window.event;
+    var charCode = (event.which) ? event.which : event.keyCode;
+    var parts = event.srcElement.value.split('.');
 
-    for(var i=0 ; i<3 ; i++){
-   
-    this.rateService.getRates(this.selectedLevel1[i]).then(response => {
-      if (response.rates) {
-        if(service){        
-        const items: Array<any> = this.parseData(response.rates);
-        // items.push({ id: 'EUR', value: 1 });
-        let base:string = null;
-        base = response.base;
+    if (charCode > 31 && (charCode < 48 || charCode > 57) && (charCode != 190 && charCode != 110) && (charCode != 46 && charCode != 8) && (charCode < 96 || charCode > 105)) {
+      this.CurrencycorrectionFlag = false;
+      return false;
+    }
+    else if ((charCode == 190 || charCode == 110) && parts.length > 1 && (charCode != 46 && charCode != 8)) {
+      this.CurrencycorrectionFlag = false;
+      return false;
+    }
+    this.CurrencycorrectionFlag = true;
+    return true;
+  };
 
-        let List: Array<any> = [];
-       
-        if(base === "USD"){
-           this.referarray = [ { id: "CAD", value: 2 }, { id: "EUR", value: 3 }];
-          List.push({ id: "USD", value: 1 });
+
+  onReverse(event) {
+    event = (event) ? event : window.event;
+    var charCode = (event.which) ? event.which : event.keyCode;
+    var parts = event.srcElement.value.split('.');
+
+    if (charCode > 31 && (charCode < 48 || charCode > 57) && (charCode != 46 && charCode != 8)) {
+      this.CurrencycorrectionFlagreverse = false;
+      return false;
+    }
+    else if (charCode == 46 && parts.length > 1) {
+      this.CurrencycorrectionFlagreverse = false;
+      return false;
+    }
+    this.CurrencycorrectionFlagreverse = true;
+    return true;
+  };
+
+
+  public getCurrencyRate(initial, way) {
+
+    for (var i = 0; i < 3; i++) {
+
+      if (way) {
+        if (initial) {
+          if (this.selectedLevel1[i] === this.selectedLevel2[i]) { this.output[i] = this.input[i] }
+          else {
+            this.output[i] = Math.ceil((this.input[i] * this.fromRates[this.selectedLevel2[i]]) * 100) / 100;
+          }
         }
-        else if(base === "CAD"){
-           this.referarray = [ { id: "USD", value: 2 }, { id: "EUR", value: 3 }];
-          List.push({ id: "CAD", value: 1 });
+        else {
+          if (this.selectedLevel2[i] === this.selectedLevel1[i]) { this.input[i] = this.output[i] }
+          else { this.input[i] = Math.ceil((this.output[i] / this.fromRates[this.selectedLevel2[i]]) * 100) / 100; }
         }
-        else if   (base === "EUR"){
-           this.referarray = [ { id: "USD", value: 2 }, { id: "CAD", value: 3 }];
-          List.push({ id: "EUR", value: 1 });
-        }
+      }
+      else {
 
-        
-
-        for (var _i = 0; _i < items.length; _i++) {
-          for (var _j = 0; _j < this.referarray.length; _j++) {
-            if (items[_i].id === this.referarray[_j].id) {
-              List.push({ id: items[_i].id, value: items[_i].value });
+        if (initial) {
+          if (this.CurrencycorrectionFlag == true) {
+            if (this.selectedLevel1[i] === this.selectedLevel2[i]) { this.output[i] = this.input[i] }
+            else {
+              this.output[i] = Math.ceil((this.input[i] * this.fromRates[this.selectedLevel2[i]]) * 100) / 100;
             }
           }
         }
-      
-
-        this.levels = List;
-        this.selectedLevel1[i]= this.levels[0].id;
-        this.selectedLevel2[i] = this.levels[2].id;
-        this.referarray = this.referarray;
-        this.currencyrate(false);
+        else {
+          if (this.selectedLevel2[i] === this.selectedLevel1[i]) { this.input[i] = this.output[i] }
+          else { this.input[i] = Math.ceil((this.output[i] / this.fromRates[this.selectedLevel2[i]]) * 100) / 100; }
+        }
       }
-     
-        this.fromRates = response.rates;
-        this.getCurrencyRate(true);
-      
-
-      };
-
-    });
-  };
-};
-
-  onKey(event){
-      event = (event) ? event : window.event;
-    var charCode = (event.which) ? event.which : event.keyCode;
-    var parts = event.srcElement.value.split('.');
-    if (charCode > 31 && (charCode < 48 || charCode > 57 ) && charCode != 46  ) {
-        return false;
     }
-    else if (charCode == 46 && parts.length >1){
-      return false;
-    }
-    this.getCurrencyRate(true);
-
-    return true;    
-
-  };
-
-  onReverse(event){
-    event = (event) ? event : window.event;
-  var charCode = (event.which) ? event.which : event.keyCode;
-  var parts = event.srcElement.value.split('.');
-  if (charCode > 31 && (charCode < 48 || charCode > 57 ) && charCode != 46  ) {
-      return false;
   }
-  else if (charCode == 46 && parts.length >1){
-    return false;
-  }
-  this.getCurrencyRate(false);
 
-  return true;    
-
-};
-
-  public getCurrencyRate(initial) { 
-
-
-    for (var i=0; i<3; i++){
-    
-    if(initial){
-      if(this.selectedLevel1[i] === this.selectedLevel2[i])
-         {this.output[i] = this.input[i]}
-    else{
-      
-      this.output[i] = Math.ceil((this.input[i] * this.fromRates[this.selectedLevel2[i]]) * 100) / 100;}    
-       }
-
-    else{
-      if(this.selectedLevel2[i]=== this.selectedLevel1[i])
-      {this.input[i] = this.output[i]}
-          else{this.input[i] = Math.ceil((this.output[i] / this.fromRates[this.selectedLevel2[i]]) * 100) / 100;}    
-    }
-  }   
-}
 
   private parseData(data) {
     const arr: Array<any> = [];
@@ -173,5 +189,6 @@ export class ConverterComponent implements OnInit {
   }
 
 
-}
 
+}
+​
