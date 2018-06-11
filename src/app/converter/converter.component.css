@@ -1,3 +1,9 @@
 .selectwidth{
     width: 100%
 }
+.formLayout{
+    display: inline-block;
+    float: left;
+    margin: 1rem;
+    width: 25rem;
+}
