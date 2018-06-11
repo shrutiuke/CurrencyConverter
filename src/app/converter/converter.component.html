@@ -1,48 +1,54 @@
 <body>
+    <div>
+        <div class="formLayout slds-card" *ngFor="let term of arrayOne(3) ; let i = index;">
+            <div class="slds-p-around_medium">
+                <label class="slds-page-header__title">Currency Converter</label>
+                <div class=" slds-gutters slds-p-around_medium">
+                    <label class="slds-item_label" for="text-input-id-1">Type in amount and select Currency:</label>
+                    <div class="slds-grid">
+                        <div class=" slds-size_1-of-2 ">
+                            <input id="inputCurr" class="slds-input slds-col " type="text" maxlength="40" [(ngModel)]="input[i]" (keydown)="onKey($event)"
+                                (change)="getCurrencyRate(true,false)" placeholder="0.00">
+                        </div>
+                        <div class="slds-col slds-size_1-of-2 ">
+                            <select class="slds-select slds-col" [(ngModel)]="selectedLevel1[i]" [disabled]="butDisabled" (ngModelChange)="currencyrate(false)">
+                                <option *ngFor="let level of levels; let idx1 = index" [ngValue]="level.id" [attr.selected]="idx1" [attr.selected]="idx1 == 0 ? true : null">{{level.id}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-p-around_medium">
+                <div class=" slds-gutters slds-p-around_medium">
+                    <label class="slds-item_label" for="text-input-id-1">Converted Amount:</label>
+                    <div class=" slds-grid">
+                        <div class=" slds-size_1-of-2">
+                            <input id="oututCurr" class="slds-input slds-col" type="text" placeholder="0.00" [(ngModel)]="output[i]" (keydown)="onReverse($event)"
+                                (change)="getCurrencyRate(flase,false)">
+                        </div>
+                        <div class=" slds-size_1-of-2 slds-col ">
+                            <select class="slds-select slds-col" [disabled]="butDisabled" [(ngModel)]="selectedLevel2[i]" (ngModelChange)="getCurrencyRate(true,true)">
+                                <option *ngFor="let level of levels ; let idx2 = index" [ngValue]="level.id" [attr.selected]="idx2" [attr.selected]="idx2 == 0 ? true : null">{{level.id}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    <div class="formLayout slds-card" *ngFor="let term of arrayOne(3) ; let i = index;">
-    <div class="   " >      
-      <div class="slds-p-around_medium">
-        <label class="slds-page-header__title">Currency Converter</label>
-        <div class=" slds-gutters slds-p-around_medium">
-          <label class="slds-item_label" for="text-input-id-1">Type in amount and select Currency:</label>
-          <div class="slds-grid">
-            <div class=" slds-size_1-of-2 ">
-              <input id="inputCurr" class="slds-input slds-col " type="text" maxlength="40" [(ngModel)]="input[i]" (keypress)="onKey($event)"  placeholder="0.00">
-             </div>
-            <div class="slds-col  slds-size_1-of-2 ">
-              <select class="slds-select slds-col" id="selectedLevel1" [(ngModel)]="selectedLevel1[i]" [disabled]="butDisabled" (ngModelChange)="currencyrate(false)">
-                <option *ngFor="let level of levels" [ngValue]="level.id">{{level.id}}</option>
-              </select>
+            <div>
+                <div>
+                    <a href="javascript:void(0);" (click)="showDisclaimer($event,i)" id="desclaimer_{{i}}">Disclaimer</a>
+                </div>
+                <div *ngIf="disclaimerFlag && displayBlock === i ">
+                    <p class="label">***Exchange rate is the rate at which one currency will be exchanged for another. It is also regarded
+                        as the value of one country’s currency in relation to another currency.</p>
+                </div>
+
             </div>
-          </div>
+
         </div>
-      </div>
-      <div class="slds-p-around_medium">
-        <div class=" slds-gutters slds-p-around_medium">
-          <label class="slds-item_label" for="text-input-id-1">Converted Amount:</label>
-          <div class=" slds-grid">
-            <div class=" slds-size_1-of-2">
-              <input id="oututCurr" class="slds-input  slds-col" type="text"   placeholder="0.00" [(ngModel)]="output[i]" (keypress)="onReverse($event)">
-            </div>
-            <div class=" slds-size_1-of-2 slds-col  ">
-              <select class="slds-select slds-col" [disabled]="butDisabled" [(ngModel)]="selectedLevel2[i]" (ngModelChange)="getCurrencyRate(true)" >
-                <option *ngFor="let level of levels" [ngValue]="level.id">{{level.id}}</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div> 
-        <div>
-          <a href="javascript:void(0);" (click)="showDisclaimer()" >Disclaimer</a>
-        </div>
-        <div *ngIf="disclaimerFlag">
-          <p class="label">***Exchange rate is the rate at which one currency will be exchanged for another. It is also regarded as the value
-            of one country’s currency in relation to another currency.</p>
-        </div>
-      </div>
+
+
     </div>
-  </div>
-</body>
 
+</body>
