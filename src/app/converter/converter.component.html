@@ -37,12 +37,13 @@
 
             <div>
                 <div>
-                    <a href="javascript:void(0);" (click)="showDisclaimer($event,i)" id="desclaimer_{{i}}" class="locationtag">Disclaimer</a>
+                    <a href="javascript:void(0);" (click)="this['showDisclaimer_' + i]($event,i)" id="desclaimer_{{i}}" class="locationtag">Disclaimer</a>
                 </div>
-                <div *ngIf="disclaimerFlag && displayBlock === i " class="locationtag">
+                <div *ngIf=" this['disclaimerFlag_' + i]"  class="locationtag">
                     <p class="label">***Exchange rate is the rate at which one currency will be exchanged for another. It is also regarded
-                        as the value of one country’s currency in relation to another currency.</p>
-                </div>
+                       as the value of one country’s currency in relation to another currency.</p>
+
+                </div> 
 
             </div>
 
