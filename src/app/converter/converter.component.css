@@ -7,6 +7,10 @@
     margin: 1rem;
     width: 25rem;
 }
-.locationtag{
-float:right;
+.locationtag
+{
+    float:right;
+}
+.updivlayout{
+    margin-top: -2rem;
 }

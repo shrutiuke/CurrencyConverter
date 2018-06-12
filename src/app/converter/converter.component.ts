@@ -17,6 +17,7 @@ export class ConverterComponent implements OnInit {
   name: string;
   levelNum: number;
   levels: Array<any> = [];
+  levelBase : Array<any> = [];
   fromRates: Object = {};
   referarray: Array<any> = [];
   selectedLevel1: Array<any> = [];
@@ -62,12 +63,15 @@ export class ConverterComponent implements OnInit {
     for (var i = 0; i < 3; i++) {
       this.rateService.getRates(this.selectedLevel1[i]).then(response => {
         if (response.rates) {
+   
           if (service) {
             const items: Array<any> = this.parseData(response.rates);
             // items.push({ id: 'EUR', value: 1 });
             let base: string = null;
             base = response.base;
             let List: Array<any> = [];
+            let BaseList : Array<any> = [];
+            BaseList.push({id: "EUR", value: "1"});
             if (base === "EUR") {
               this.referarray = [{ id: "USD", value: 2 }, { id: "CAD", value: 3 }];
               List.push({ id: "EUR", value: 1 });
@@ -83,12 +87,16 @@ export class ConverterComponent implements OnInit {
 
             for (var _i = 0; _i < items.length; _i++) {
               for (var _j = 0; _j < this.referarray.length; _j++) {
-                if (items[_i].id === this.referarray[_j].id) {
+                 
+                  
+                if (items[_i].id === this.referarray[_j].id) {                 
+                  
                   List.push({ id: items[_i].id, value: items[_i].value });
                 }
               }
             }
             this.levels = List;
+            this.levelBase = BaseList;
             this.referarray = this.referarray;
             this.currencyrate(false);
 
@@ -107,12 +115,17 @@ export class ConverterComponent implements OnInit {
     event = (event) ? event : window.event;
     var charCode = (event.which) ? event.which : event.keyCode;
     var parts = event.srcElement.value.split('.');
+    var afterdecimalpart = parts[1]; 
 
     if (charCode > 31 && (charCode < 48 || charCode > 57) && (charCode != 190 && charCode != 110) && (charCode != 46 && charCode != 8) && (charCode < 96 || charCode > 105)) {
       this.CurrencycorrectionFlag = false;
       return false;
     }
     else if ((charCode == 190 || charCode == 110) && parts.length > 1 && (charCode != 46 && charCode != 8)) {
+      this.CurrencycorrectionFlag = false;
+      return false;
+    }
+    else if(afterdecimalpart.length > 1 && (charCode != 190 && charCode != 110) && (charCode != 46 && charCode != 8)) {
       this.CurrencycorrectionFlag = false;
       return false;
     }
@@ -125,13 +138,18 @@ export class ConverterComponent implements OnInit {
     event = (event) ? event : window.event;
     var charCode = (event.which) ? event.which : event.keyCode;
     var parts = event.srcElement.value.split('.');
-
-    if (charCode > 31 && (charCode < 48 || charCode > 57) && (charCode != 46 && charCode != 8)) {
+    var afterdecimalpart = parts[1]; 
+    
+    if (charCode > 31 && (charCode < 48 || charCode > 57) && (charCode != 190 && charCode != 110) && (charCode != 46 && charCode != 8) && (charCode < 96 || charCode > 105)) {
       this.CurrencycorrectionFlagreverse = false;
       return false;
     }
-    else if (charCode == 46 && parts.length > 1) {
+    else if ((charCode == 190 || charCode == 110) && parts.length > 1 && (charCode != 46 && charCode != 8)) {
       this.CurrencycorrectionFlagreverse = false;
+      return false;
+    }
+    else if(afterdecimalpart.length > 1 && (charCode != 190 && charCode != 110) && (charCode != 46 && charCode != 8)) {
+      this.CurrencycorrectionFlag = false;
       return false;
     }
     this.CurrencycorrectionFlagreverse = true;

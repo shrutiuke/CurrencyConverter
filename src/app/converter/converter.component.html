@@ -12,19 +12,19 @@
                         </div>
                         <div class="slds-col slds-size_1-of-2 ">
                             <select class="slds-select slds-col" [(ngModel)]="selectedLevel1[i]" [disabled]="butDisabled" (ngModelChange)="currencyrate(false)">
-                                <option *ngFor="let level of levels; let idx1 = index" [ngValue]="level.id" [attr.selected]="idx1" [attr.selected]="idx1 == 0 ? true : null">{{level.id}}</option>
+                                <option *ngFor="let baselevel of levelBase; let idx1 = index" [ngValue]="baselevel.id" [attr.selected]="idx1" [attr.selected]="idx1 == 0 ? true : null">{{baselevel.id}}</option>
                             </select>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="slds-p-around_medium">
-                <div class=" slds-gutters slds-p-around_medium">
+                <div class=" slds-gutters slds-p-around_medium updivlayout">
                     <label class="slds-item_label" for="text-input-id-1">Converted Amount:</label>
                     <div class=" slds-grid">
                         <div class=" slds-size_1-of-2">
                             <input id="oututCurr" class="slds-input slds-col" type="text" placeholder="0.00" [(ngModel)]="output[i]" (keydown)="onReverse($event)"
-                                (change)="getCurrencyRate(flase,false)">
+                                (change)="getCurrencyRate(false,false)">
                         </div>
                         <div class=" slds-size_1-of-2 slds-col ">
                             <select class="slds-select slds-col" [disabled]="butDisabled" [(ngModel)]="selectedLevel2[i]" (ngModelChange)="getCurrencyRate(true,true)">
@@ -39,7 +39,7 @@
                 <div>
                     <a href="javascript:void(0);" (click)="showDisclaimer($event,i)" id="desclaimer_{{i}}" class="locationtag">Disclaimer</a>
                 </div>
-                <div *ngIf="disclaimerFlag && displayBlock === i" class="locationtag">
+                <div *ngIf="disclaimerFlag && displayBlock === i " class="locationtag">
                     <p class="label">***Exchange rate is the rate at which one currency will be exchanged for another. It is also regarded
                         as the value of one country’s currency in relation to another currency.</p>
                 </div>
