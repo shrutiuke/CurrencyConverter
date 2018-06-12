@@ -24,7 +24,9 @@ export class ConverterComponent implements OnInit {
   selectedLevel2: Array<any> = [];
   input: Array<any> = [];
   output: Array<any> = [];
-  disclaimerFlag: boolean = false;
+  disclaimerFlag_0: boolean = false;
+  disclaimerFlag_1: boolean = false;
+  disclaimerFlag_2: boolean = false; 
   displayBlock: number;
   CurrencycorrectionFlag: boolean = false;
   butDisabled: boolean;
@@ -40,24 +42,50 @@ export class ConverterComponent implements OnInit {
   arrayOne(n: number): any[] {
     return Array(n);
   }
-  showDisclaimer(event,value) {
-
+  
+  
+  showDisclaimer_0(event,value){
     var target = event.target || event.srcElement || event.currentTarget;
     var idAttr = target.attributes.id;
     var value = idAttr.nodeValue;
-    var id = value.split("_", 2)[1];
-    var flagId = "disclaimerFlag_".concat(id);
- 
-    this.disclaimerFlag= !this.disclaimerFlag;
-
-    if(id == 0){
-      this.displayBlock = 0;
-    }else if(id == 1){
-      this.displayBlock = 1;
-    }else if(id == 2){
-      this.displayBlock = 2;
-    }
+    var id = value.split("_", 2)[1]; 
+    this.disclaimerFlag_0= !this.disclaimerFlag_0;
   }
+
+  showDisclaimer_1(event,value){
+    var target = event.target || event.srcElement || event.currentTarget;
+    var idAttr = target.attributes.id;
+    var value = idAttr.nodeValue;
+    var id = value.split("_", 2)[1]; 
+    this.displayBlock = 1;
+    this.disclaimerFlag_1= !this.disclaimerFlag_1;
+  }
+
+  showDisclaimer_2(event,value){
+    var target = event.target || event.srcElement || event.currentTarget;
+    var idAttr = target.attributes.id;
+    var value = idAttr.nodeValue;
+    var id = value.split("_", 2)[1]; 
+    this.disclaimerFlag_2= !this.disclaimerFlag_2;
+  } 
+//   showDisclaimer(event,value) {
+
+//     var target = event.target || event.srcElement || event.currentTarget;
+//     var idAttr = target.attributes.id;
+//     var value = idAttr.nodeValue;
+//     var id = value.split("_", 2)[1];
+//     var flagId = "disclaimerFlag_".concat(id);
+ 
+//     this.disclaimerFlag= !this.disclaimerFlag;
+
+//     if(id == 0){
+//       this.displayBlock = 0;
+//     }else if(id == 1){
+//       this.displayBlock = 1;
+//     }else if(id == 2){
+//       this.displayBlock = 2;
+//     }
+//   }
  
   public currencyrate(service) {
     for (var i = 0; i < 3; i++) {
